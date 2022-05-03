@@ -35,7 +35,8 @@ public class MyCarDto {
 	@Column(name = "carguip")
 	private String carguip;
 	
-	@CreationTimestamp 								// 엔터티가 생성되는 시점의 시간이 자동등록
+	@CreationTimestamp 	// 엔터티가 생성되는 시점의 시간이 자동등록
+	@Column(updatable = false) // 수정안되는 컬럼
 	private Timestamp writeday;
 }
 

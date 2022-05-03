@@ -1,5 +1,7 @@
 package board.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +22,11 @@ public class ListController {
 	public ModelAndView list() {
 		
 		ModelAndView mv = new ModelAndView();
-		
 		mv.addObject("message", "스프링 부트 게시판 만들기");
 		
-		// 목록 저장
-		mv.addObject("list", dao.getlistAll());
+		// dao로부터 목록 가져와서 model에 저장하기
+		List<MyCarDto> list = dao.getAllCars();
+		mv.addObject("list", list);
 		
 		mv.setViewName("list");
 		
@@ -48,6 +50,37 @@ public class ListController {
 		return "redirect:/"; 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

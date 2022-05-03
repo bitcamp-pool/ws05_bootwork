@@ -1,0 +1,29 @@
+#tomcat
+server:
+  port: 9009
+
+#spring  
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/board/
+      suffix: .jsp
+  devtools:
+    livereload:
+      enabled: true
+      
+#mysql      
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bit901?serverTimezone=Asia/Seoul
+    username: angel
+    password: 1234
+        
+#jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

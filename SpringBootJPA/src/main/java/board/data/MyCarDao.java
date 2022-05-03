@@ -25,9 +25,53 @@ public class MyCarDao {
 		daoInter.save(dto);
 	}
 	
-	// Select 조회
-	public List<MyCarDto> getlistAll() {
+	// list 조회
+	public List<MyCarDto> getAllCars() {
 		
-		return daoInter.findAll();
+		List<MyCarDto> list = daoInter.findAll();
+		
+		return list;
+	}
+	
+	// 수정폼에 객체 전달
+	public MyCarDto getMyCar(Long num) {
+		
+		return daoInter.getById(num);
+	}
+	
+	// 수정
+	public void updateCar(MyCarDto dto) {
+		
+		/* num 이 있을 경우 update
+		 * 없으면 insert
+		 */
+		daoInter.save(dto);
+	}
+	
+	// 삭제
+	public void deleteCar(Long num) {
+		
+		daoInter.deleteById(num);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
