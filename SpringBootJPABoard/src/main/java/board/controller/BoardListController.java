@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,9 +36,12 @@ public class BoardListController {
 	public ModelAndView list() {
 		
 		ModelAndView mview = new ModelAndView();
+		List<BoardDto> list = dao.getAllDatas();
+		
+		mview.addObject("list", list);
+		mview.addObject("count", list.size());
 		
 		mview.setViewName("list");
-		
 		return mview;
 	}
 	
@@ -84,6 +88,112 @@ public class BoardListController {
 		
 		return "redirect:list";
 	}
+		
+	// detail
+	@GetMapping("/board/detail")
+	public ModelAndView detail(@RequestParam Long num) {
+		
+		ModelAndView mv = new ModelAndView();
+		
+		// dao로부터 dto얻기
+		BoardDto dto = dao.getData(num);
+		String content = dto.getContent().replace("\n", "<br>");
+		dto.setContent(content);
+		
+		// model에 저장
+		mv.addObject("dto", dto);
+		
+		mv.setViewName("detail");
+		return mv;
+	}
+	
+	@GetMapping("/board/updateform")
+	public ModelAndView updateform(@RequestParam Long num) {
+		
+		ModelAndView mv = new ModelAndView();
+		BoardDto dto = dao.getData(num);
+		
+		mv.addObject("dto", dto);
+		
+		mv.setViewName("updateform");
+		return mv;
+				
+	}
+	
+	@PostMapping("/board/update")
+	public String update(
+			@ModelAttribute BoardDto dto,
+			@RequestParam MultipartFile upload,
+			HttpServletRequest request) 
+	{
+		// 톰캣에 있는 업로드할 폴더 실제 경로
+		String path = request.getServletContext().getRealPath("/save");
+		
+		// 기존 사진 파일명
+		String oldFileName = dao.getData(dto.getNum()).getPhoto();
+		
+		// 이미지가 없는 항목(no image)에 이미지 업로드를 안했을 경우 
+		if(upload.isEmpty()) {
+			// 사진을 업로드 안했을 경우 기존 이름으로 수정
+			dto.setPhoto(oldFileName);
+		} else {
+			// 새로 저장할 파일명
+			String newFileName = changeFileName(upload.getOriginalFilename());
+			
+			// dto에 저장
+			dto.setPhoto(newFileName);
+			
+			// 기존 사진 삭제
+			deleteFile(path, oldFileName);
+			
+			// 사진 업로드
+			try {
+				upload.transferTo(new File(path + "\\" + newFileName));
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// db update
+		dao.updateBoard(dto);
+		
+		// 디테일 페이지로 이동
+		return "redirect:detail?num=" + dto.getNum();
+		
+	}
+	
+	@GetMapping("/board/delete")
+	public String delete(
+			@RequestParam Long num, 
+			HttpServletRequest request)
+	{
+		String path = request.getServletContext().getRealPath("/save");
+		String fileName = dao.getData(num).getPhoto();
+		
+		// 사진 삭제
+		deleteFile(path, fileName);
+		
+		// db에서도 삭제
+		dao.deleteBoard(num);
+		
+		// 목록으로 이동
+		return "redirect:list";
+		
+	}
+	
+	// 파일 삭제하는 메서드
+	public void deleteFile(String path, String oldFileName) {
+		
+		File file = new File(path + "\\" + oldFileName);
+		
+		// 해당 경로에 파일이 있을 경우 true
+		if(file.exists()) {
+			
+			file.delete();
+			System.out.println("파일 삭제 성공");
+		}
+	}
+	
 	
 	// 파일명 변경하는 함수
 	public String changeFileName(String fileName) {
@@ -111,6 +221,18 @@ public class BoardListController {
 		return s;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

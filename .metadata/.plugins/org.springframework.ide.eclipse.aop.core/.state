@@ -3,4 +3,5 @@
 <aop-project name="SpringBootJPABoard"/>
 <aop-project name="SpringBootJPA"/>
 <aop-project name="SpringBootEx05"/>
+<aop-project name="BootMiniProject"/>
 </aop-reference-model>
