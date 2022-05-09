@@ -11,52 +11,16 @@
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>   
 <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Lobster&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 <style type="text/css">
-   body{
-      font-size: 2rem;
-      font-family: 'Jua';
-   }
+	body{
+		font-size: 2rem;
+		font-family: 'Jua';
+	}
 </style>
 </head>
 <body>
-   <h1>게시판</h1>
+	<h1>게시판</h1>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -11,13 +11,30 @@
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>   
 <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Lobster&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 <style type="text/css">
-   body{
-      font-size: 2rem;
-      font-family: 'Jua';
-   }
+	img.mainimage{
+		width: 90px;
+		height: 90px;
+		border: 1px solid black;
+		margin-right: 10px;
+		margin-bottom: 10px;
+	}
+	
+	img.mainimage:hover{
+		border: 4px solid green;
+	}
+	
+	h2.main{
+		 font-family: 'Jua';
+		 color: pink;
+		 text-shadow: 3px 3px 3px gray;
+	}
 </style>
 </head>
 <body>
-   <h1>main</h1>
+	<h2 class="main">비트 상점에 오신걸 환영합니다</h2>
+	<c:forEach var="a" begin="1" end="20">
+		<img src="image/${a}.jpg" class="mainimage">
+		<c:if test="${a%5==0}"><br></c:if>
+	</c:forEach>
 </body>
 </html>

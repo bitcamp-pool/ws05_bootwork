@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.MemberMapperInter">
+	<select id="getTotalCount" resultType="int">
+		select count(*) from member
+	</select>
+	<insert id="insertMember" parameterType="member">
+		insert into member (name, id, pass, email, hp, addr, gaipday)  
+		values(
+			#{name},
+			#{id},
+			#{pass},
+			#{email},
+			#{hp},
+			#{addr},
+			now()
+		)
+	</insert>
+	<select id="getSearchId" parameterType="String" resultType="int">
+		select count(*) from member where id=#{id}
+	</select>
+	<select id="getAllMembers" resultType="member">
+		select * from member order by id asc
+	</select>
+	<delete id="deleteMember" parameterType="String">
+		delete from member where num=#{num}
+	</delete>
+	<select id="getSearchName" parameterType="String" resultType="String">
+		select name from member where id=#{id}
+	</select>
+	<select id="login" parameterType="Map" resultType="int">
+		select count(*) from member where id=#{id} and pass=#{pass}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

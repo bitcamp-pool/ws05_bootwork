@@ -24,13 +24,11 @@ public class TestMenuController {
 		return "/board/boardlist";
 	}
 	
-	@GetMapping("/member/form")
-	public String home4() {
+	@GetMapping("/load/map")
+	public String map() {
 		
-		return "/member/memberform";
+		return "/sub/layout/map";
 	}
-	
-	
 	
 	
 }
