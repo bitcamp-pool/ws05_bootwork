@@ -18,6 +18,13 @@
 </style>
 </head>
 <body>
+	<c:if test="${sessionScope.saveid=='yes' }">
+		<c:set var="loginid" value="${sessionScope.loginid}"/>
+	</c:if>
+	<c:if test="${sessionScope.saveid==null || sessionScope.saveid=='no' }">
+		<c:set var="loginid" value=""/>
+	</c:if>
+	
 	<div class="loginform">
 		<form action="process" method="post" class="form-inline">
 			<table class="table table-bordered" style="width: 400px;">
@@ -27,7 +34,8 @@
 					<td>
 						<input type="text" name="id" class="form-control"
 						required="required" autofocus="autofocus"
-						style="width:150px;" placeholder="아이디">
+						style="width:150px;" 
+						placeholder="아이디" value="${loginid}">
 					</td>
 				</tr>
 				<tr>
@@ -40,7 +48,8 @@
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="checkbox" name="chkid">아이디 저장
+						<input type="checkbox" name="chkid"
+							${loginid=="" ? "":"checked"}>아이디 저장
 						
 						<button type="submit" class="btn btn-info"
 							style="width:130px;">회원 로그인</button>
@@ -51,3 +60,45 @@
 	</div>
 </body>
 </html>
+
+
+<!--
+로그인시 세션
+
+  loginid  : 로그인한 아이디 저장
+  loginname: 로그인한 사람의 이름
+  saveid :  yes/no
+  loginok: yes/null
+
+  
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

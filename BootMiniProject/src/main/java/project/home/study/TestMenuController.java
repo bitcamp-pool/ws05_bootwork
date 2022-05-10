@@ -18,11 +18,11 @@ public class TestMenuController {
 		return "/shop/shopform";
 	}
 	
-	@GetMapping("/board/list")
-	public String home3() {
-		
-		return "/board/boardlist";
-	}
+	/*
+	 * @GetMapping("/board/list") public String home3() {
+	 * 
+	 * return "/board/boardlist"; }
+	 */
 	
 	@GetMapping("/load/map")
 	public String map() {

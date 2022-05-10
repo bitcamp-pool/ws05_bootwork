@@ -26,7 +26,7 @@ public class LoginController {
 	@GetMapping("/form")
 	public String form() {
 		
-		return "/login/loginform";
+		return "/sub2/login/loginform";
 	}
 	
 	@PostMapping("/process")
