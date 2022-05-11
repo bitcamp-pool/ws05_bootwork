@@ -12,6 +12,7 @@ public class BoardDto {
 	
 	private int num;
 	private String id;
+	private String name;
 	private String subject;
 	private String content;
 	private String photos;

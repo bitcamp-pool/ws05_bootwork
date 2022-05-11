@@ -3,6 +3,7 @@ package data.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import data.dto.BoardDto;
+import data.mapper.MemberMapperInter;
 import data.service.BoardService;
 import util.FileUtil;
 
@@ -30,15 +32,68 @@ public class BoardController {
 	@Autowired
 	private BoardService service;
 	
+	@Autowired
+	private MemberMapperInter memberMapper;
+	
 	@GetMapping("/list")
-	public ModelAndView list() {
+	public ModelAndView list(
+			@RequestParam(defaultValue = "1") int currentPage) 
+	{
 		
 		ModelAndView mv = new ModelAndView();
 		
-		int totalCount; // 총 갯수
+		// 페이징처리
+		int totalCount;   	// 총 갯수
+		int perPage  = 5;  	// 한 페이지당 보여질 글의 개수
+		int perBlock = 5; 	// 한 블럭당 보여질 페이지 수
+		int totalPage;		// 총 페이지 수
+		int startNum;		// 한 페이지에서 보여질 시작 글번호
+		int startPage;		// 한 블럭에서 보여질 시작 페이지 번호
+		int endPage; 		// 한 블럭에서 보여질 끝 페이지 번호
+		int no; 			// 각 페이지당 보여질 시작 번호
 		
+		// 총 글의 개수를 구한다
 		totalCount = service.getTotalCount();
+		
+		// 총 페이지 수를 구한다
+		   totalPage = totalCount/perPage + (totalCount % perPage == 0 ? 0 : 1);
+		// totalPage = (int)Math.ceil((double)totalCount/perPage);
+		
+		// 각 블럭의 시작페이지(한 블럭당 5개일 경우)
+		// 1, 6, 11 ...(currentPage가 1~5 이면 1, 6~10 이면 6)
+		startPage = (currentPage-1)/perBlock * perBlock + 1;
+				
+	    // 5, 10, 15 ..(currentPage가 1~5 이면 5, 6~10 이면 10)
+	    endPage = startPage + perBlock -1;
+	    
+	    // 마지막 블럭에서는 마지막 페이지(총 페이지수)까지만 나오게
+	    if(endPage > totalPage)
+	    	endPage = totalPage;
+	    
+	    // 각 페이지에서 보여질 글의 시작번호(mysql은 0 부터)
+	    // 예) 한 페이지당 3개일 경우 1페이지:0, 2페이지:3, 3페이지:6 ...
+	    startNum = (currentPage - 1) * perPage;
+	    
+	    // 각 페이지당 보여질 시작번호
+	    no = totalCount - (currentPage - 1) * perPage;
+	    
+	    // 데이터 가져오기
+	    List<BoardDto> list = service.getList(startNum, perPage);
+	    
+	    // 각 데이터에 id를 이용해서 이름 넣어주기
+	    for (BoardDto dto : list) {
+	    	String id = dto.getId();
+	    	String name = memberMapper.getSearchName(id);
+	    	dto.setName(name);
+	    }
+	    
+	    mv.addObject("currentPage", currentPage);
 		mv.addObject("totalCount", totalCount);
+		mv.addObject("totalPage", totalPage);
+		mv.addObject("startPage", startPage);
+		mv.addObject("endPage", endPage);
+		mv.addObject("no", no);
+		mv.addObject("list", list);
 		
 		mv.setViewName("/board/boardlist");
 		return mv;
@@ -110,6 +165,32 @@ public class BoardController {
 		
 		return "redirect:list?currentPage=" + currentPage; // 해당 페이지로 이동
 	}
+	
+	@GetMapping("/content")
+	public ModelAndView content(
+			@RequestParam int num,
+			@RequestParam String currentPage) 
+	{
+		
+		ModelAndView mv = new ModelAndView();
+		
+		// 조회수 1 증가
+		service.updateReadCount(num);
+		
+		// num에 해당하는 dto
+		BoardDto dto = service.getData(num);
+		
+		// 이름 넣어주기
+		String name = memberMapper.getSearchName(dto.getId());
+		dto.setName(name);
+		
+		mv.addObject("dto", dto);
+		mv.addObject("currentPage", currentPage);
+		
+		mv.setViewName("/board/content");
+		return mv;
+	}
+	
 }
 
 

@@ -50,6 +50,7 @@ create table reboard(
 
 select ifnull(max(num), 0) num from reboard;
 
+select * from reboard order by num desc limit 0, 1;
 
 
 

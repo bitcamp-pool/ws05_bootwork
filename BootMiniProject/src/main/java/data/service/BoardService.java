@@ -71,7 +71,7 @@ public class BoardService implements BoardServiceInter {
 		dto.setRestep(restep);
 		dto.setRelevel(relevel);
 		
-		// insert
+		// insert 쿼리실행
 		mapper.insertBoard(dto);
 	}
 
