@@ -3,6 +3,7 @@ package data.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import data.dto.BoardDto;
+
 import data.mapper.MemberMapperInter;
 import data.service.BoardService;
 import util.FileUtil;
@@ -189,6 +192,113 @@ public class BoardController {
 		
 		mv.setViewName("/board/content");
 		return mv;
+	}
+	
+	@GetMapping("/chu")
+	@ResponseBody
+	public Map<String, Integer> updateChu(
+			@RequestParam int num,
+			@RequestParam int chu)
+	{
+		// db chu, totalchu update
+		service.updateChu(chu, num);
+		
+		// 변경된 totalchu 받아오기
+		int totalchu = service.getData(num).getTotalchu();
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("totalchu", totalchu);
+		
+		return map;
+	}
+	
+	@GetMapping("/updateform")
+	public ModelAndView updateForm(
+			@RequestParam int num,
+			@RequestParam int currentPage) 
+	{
+		ModelAndView mv = new ModelAndView();
+		
+		// num에 해당하는 dto
+		BoardDto dto = service.getData(num);
+		
+		// model에 저장
+		mv.addObject("dto", dto);
+		mv.addObject("currentPage", currentPage);
+		
+		mv.setViewName("/sub2/board/updateform");
+		
+		return mv;
+	}
+	
+	
+	@PostMapping("/update")
+	public String update(
+			@ModelAttribute BoardDto dto,
+			@RequestParam String currentPage,
+			@RequestParam ArrayList<MultipartFile> upload,
+			HttpServletRequest request) 
+	{
+		System.out.println("dto=" + dto.toString());
+		// 사진을 저장할 경우
+		String path = request.getServletContext().getRealPath("/save");
+		
+		// 사진을 업로드 안했을 경우 photos에 'null' 라고 저장
+		if(upload.get(0).getOriginalFilename().equals("")) {
+			dto.setPhotos(null);
+		} else { // 사진을 넣으면
+			/* save폴더에 기존 리소스 삭제 후 업데이트
+			 */
+			FileUtil fileUtil = new FileUtil();
+			String photos = "";
+			for (MultipartFile f : upload) {
+				String rename = fileUtil.changeFileName(f.getOriginalFilename());
+				photos += rename + ",";
+				File file = new File(path + "\\" + rename);
+				try {
+					f.transferTo(file); // save 폴더에 업로드 됨
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			// 마지막 컴마 제거
+			photos = photos.substring(0, photos.length() - 1);
+			// System.out.println(photos);
+			dto.setPhotos(photos);
+		}
+		 
+		// db update
+		service.updateBoard(dto);
+		
+		// 수정한 다음에 내용보기로 이동
+		return "redirect:content?currentPage=" + currentPage + "&num=" + dto.getNum();
+	}
+	
+	@GetMapping("/delete")
+	public String delete(
+			@RequestParam int num,
+			@RequestParam int currentPage,
+			HttpServletRequest request) 
+	{
+		// save 폴더의 위치 구하기
+		String path=request.getServletContext().getRealPath("/save");
+		
+		// save 폴더의 파일 삭제
+		String photos = service.getData(num).getPhotos();
+		if(!photos.equals("no")) {
+			String[] fileName = photos.split(",");
+			for(String f : fileName) {
+				File file = new File(path + "\\" + f);
+				if(file.exists())
+					file.delete();
+			}
+		}
+		
+		// db에서 데이터 삭제
+		service.deleteBoard(num);
+		
+		// 보던 페이지로 이동
+		return "redirect:list?currentPage=" + currentPage;
 	}
 	
 }

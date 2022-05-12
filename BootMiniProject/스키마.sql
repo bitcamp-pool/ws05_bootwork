@@ -52,7 +52,14 @@ select ifnull(max(num), 0) num from reboard;
 
 select * from reboard order by num desc limit 0, 1;
 
-
+create table answer (
+	idx smallint auto_increment primary key,
+	num smallint references reboard(num) on delete cascade,
+	name varchar(20),
+	id varchar(20),
+	message varchar(1000),
+	writeday datetime
+);
 
 
 

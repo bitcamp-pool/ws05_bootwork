@@ -14,4 +14,7 @@ public interface BoardServiceInter {
 	public void insertBoard(BoardDto dto);
 	public void updateReadCount(int num);
 	public BoardDto getData(int num);
+	public void updateChu(int chu, int num);
+	public void updateBoard(BoardDto dto);
+	public void deleteBoard(int num);
 }

@@ -31,6 +31,30 @@
 		select * from reboard where num=#{num}
 	</select>
 	
+	<update id="updateChu" parameterType="Map">
+		update reboard set chu=#{chu},
+		<if test="chu==0">
+			totalchu = totalchu - 1
+		</if>
+		<if test="chu==1">
+			totalchu = totalchu + 5
+		</if>
+		where num = #{num}
+	</update>
+	
+	<update id="updateBoard" parameterType="board">
+		update reboard set subject=#{subject}, content=#{content}
+		<if test="photos!=null">
+			,photos=#{photos}
+		</if>
+		where num = #{num}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from reboard where num = #{num}
+	</delete>
+	
+	
 </mapper>
 
 
