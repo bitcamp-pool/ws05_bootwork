@@ -61,7 +61,16 @@ create table answer (
 	writeday datetime
 );
 
-
+drop table shop;
+create table shop (
+	num smallint auto_increment primary key,
+	sangpum varchar(50),
+	color varchar(20),
+	price int,
+	subject varchar(1000),
+	content varchar(3000),
+	ipgoday varchar(20)
+);
 
 
 

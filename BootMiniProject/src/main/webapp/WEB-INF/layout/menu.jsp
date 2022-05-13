@@ -67,6 +67,9 @@
 			<a href="${root}/shop/form">상품등록</a>
 		</li>
 		<li>
+			<a href="${root}/shop/list">상품목록</a>
+		</li>
+		<li>
 			<a href="${root}/board/list">게시판</a>
 		</li>
 		<li>

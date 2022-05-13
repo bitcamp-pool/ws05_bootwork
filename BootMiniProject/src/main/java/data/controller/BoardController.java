@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import data.dto.BoardDto;
-
+import data.mapper.AnswerMapperInter;
 import data.mapper.MemberMapperInter;
 import data.service.BoardService;
 import util.FileUtil;
@@ -34,6 +34,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService service;
+	
+	@Autowired
+	private AnswerMapperInter answerMapper;
 	
 	@Autowired
 	private MemberMapperInter memberMapper;
@@ -85,9 +88,14 @@ public class BoardController {
 	    
 	    // 각 데이터에 id를 이용해서 이름 넣어주기
 	    for (BoardDto dto : list) {
+	    	
 	    	String id = dto.getId();
 	    	String name = memberMapper.getSearchName(id);
 	    	dto.setName(name);
+	    	
+	    	// 댓글 개수 acount에 넣기
+	    	int acount = answerMapper.getAnswerList(dto.getNum()).size();
+	    	dto.setAcount(acount);
 	    }
 	    
 	    mv.addObject("currentPage", currentPage);

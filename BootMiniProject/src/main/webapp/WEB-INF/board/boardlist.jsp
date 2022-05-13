@@ -64,6 +64,14 @@
 									style="color: gray; font-size: 0.8em;"></span>
 							</c:if>
 							
+							<!-- 댓글 개수 출력 -->
+							<c:if test="${dto.acount>0}">
+								<a href="content?num=${dto.num}&currentPage=${currentPage}#alist"
+									style="color:red;">
+									[${dto.acount}]
+								</a>														
+							</c:if>
+							
 						</td>
 						<td>${dto.name}</td>
 						<td><fmt:formatDate value="${dto.writeday}"

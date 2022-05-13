@@ -25,11 +25,113 @@
 	#afrm {
 		margin-top: 20px;
 	}
+	table.t{
+		margin-left: 20px;
+	}
+	pre.m{
+		background-color: white;
+		border: none;
+		font-size: 14px;
+		font-family: 'Gamja Flower';
+	}
+	span.day{
+		float: right;
+		color: gray;
+		font-size: 12px;
+	}
+	span.adel{
+		margin-left: 10px;
+		color: red;
+		cursor: pointer;
+	}
+	
 	
 </style>
 
 <script type="text/javascript">
+	// 댓글 출력하는 함수
+	function list() {
+		// alert(${dto.num});
+		var num = ${dto.num};
+		var login = '${sessionScope.loginok}';
+		var loginid = '${sessionScope.loginid}';
+		console.log(login, loginid);
+		
+		$.ajax({
+			type:"get",
+			dataType:"json",
+			url:"../answer/list",
+			data:{"num":num},
+			success:function(data){
+				// 댓글 개수
+				$("span.answercnt").text(data.count);
+				// console.log(data);
+				var s="";
+				s+="<table style='width:600px;' class='t'>";
+				$.each(data.alist, function(i, d){
+					s+="<tr>";
+					s+="<td width='70'>" + d.name + "</td>";
+					s+="<td width=400><pre class='m'>" + d.message + "</pre></td>";
+					s+="<td><span class='day'>" + d.writeday;
+					if(login=='yes' && loginid==d.id){
+						s+="&nbsp;<span class='glyphicon glyphicon-remove adel' idx=" + d.idx + "></span>";
+					}
+					s+="</span></td>";
+					s+="</tr>";
+				});
+				
+				s+="</table>";
+				
+				$("div.alist").html(s);
+			}
+		});
+	}
+
 	$(function() {
+		// 처음 로딩시 댓글 출력
+		list();
+		
+		// 댓글 삭제 이벤트
+		$(document).on("click", "span.adel", function(){
+			
+			//  idx 얻기
+			var idx = $(this).attr("idx");
+			
+			/* confirm : true 일 경우 ajax 함수를 통해서
+			 * 댓글 삭제 후 목록 다시 출력
+			 */
+			var ans = confirm("삭제하려면 [확인]을 눌러주세요");
+			if(ans){
+				$.ajax({
+					type:"get",
+					dataType:"text",
+					data:{"idx":idx},
+					url:"../answer/delete",
+					success:function(){
+						list();
+					}
+				});
+			}
+		});
+		
+		// 댓글 저장 이벤트
+		$("td.asave").click(function(){
+			// 전체 폼 데이터 읽기
+			var data = $("#afrm").serialize();
+			// alert(data);
+			
+			$.ajax({
+				type:"post",
+				dataType:"text",
+				url:"../answer/insert",
+				data:data,
+				success:function(){
+					list();
+					$("#message").val("");
+				}
+			});
+		});
+		
 		$("span.heart").click(function() {
 			var num = $(this).attr("num");
 			var c = $(this).attr("class");
@@ -97,7 +199,7 @@
 			&nbsp;&nbsp;<span class="answercnt">0</span>
 			
 			<!-- 댓글 부분 -->
-			<h5 class="alist" style="cursor:pointer;"><b>댓글</b></h5>
+			<h5 id="alist" class="alist" style="cursor:pointer;"><b>댓글</b></h5>
 			<div class="alist">댓글 목록 나올 곳...</div>
 			<script type="text/javascript">
 				$("h5.alist").click(function() {
@@ -111,9 +213,9 @@
 					<!-- hidden -->
 					<input type="hidden" name="num" value="${dto.num}">
 					<input type="hidden" name="id" value="${sessionScope.loginid}">
-					<input type="hidden" name="num" value="${sessionScope.loginname}">
+					<input type="hidden" name="name" value="${sessionScope.loginname}">
 					
-					<table style="width: 600px;" class="table table-bordered">
+					<table style="width: 600px; align: left;" class="table table-bordered">
 						<tr height="70">
 							<td>
 								<textarea style="width:100%; height:70px;"
@@ -128,10 +230,9 @@
 						</tr>
 					</table>
 				</form>			
-			</c:if>
-
-			
+			</c:if>		
 		</div>
+		
 		<br><br>
 		<div class="buttons">
 			<button type="button" class="btn btn-default"

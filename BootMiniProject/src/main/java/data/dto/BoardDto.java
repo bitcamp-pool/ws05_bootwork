@@ -23,4 +23,7 @@ public class BoardDto {
 	private int reg;
 	private int restep;
 	private int relevel;
+	
+	// 댓글개수
+	private int acount;
 }

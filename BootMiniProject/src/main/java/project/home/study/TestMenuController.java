@@ -12,11 +12,11 @@ public class TestMenuController {
 		return "/layout/main";
 	}
 	
-	@GetMapping("/shop/form")
-	public String home2() {
-		
-		return "/shop/shopform";
-	}
+	/*
+	 * @GetMapping("/shop/form") public String home2() {
+	 * 
+	 * return "/shop/shopform"; }
+	 */
 	
 	/*
 	 * @GetMapping("/board/list") public String home3() {
