@@ -15,6 +15,7 @@ public class ShopDto {
 	private String subject;
 	private String content;
 	private String ipgoday;
+	private String photo;
 }
 
 /* src/main/resources/static 에 라이브러리 폴더 저장
