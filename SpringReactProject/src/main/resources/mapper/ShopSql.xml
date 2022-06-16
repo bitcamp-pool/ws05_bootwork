@@ -11,7 +11,13 @@
 		select * from shop order by dan asc
 	</select>
 	
-
+	<select id="getData" parameterType="int" resultType="shop">
+		select * from shop where num=#{num}
+	</select>
+	
+	<delete id="deleteShop" parameterType="int">
+		delete from shop where num=#{num}	
+	</delete>
 	
 </mapper>
 

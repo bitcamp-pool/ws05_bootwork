@@ -10,4 +10,6 @@ import data.dto.ShopDto;
 public interface ShopMapper {
 	public void insertShop(ShopDto dto);
 	public List<ShopDto> getShopDatas();
+	public ShopDto getData(int num);
+	public void deleteShop(int num);// 사진도 삭제
 }

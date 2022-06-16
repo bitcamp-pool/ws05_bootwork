@@ -2,22 +2,27 @@ package data.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import data.dto.ShopDto;
 import data.service.ShopService;
 import util.FileUtil;
 
 @RestController // 무조건 ResponseBody
-@CrossOrigin
+@CrossOrigin	// 다른 도메인 처리(접근 에러 방지)
 @RequestMapping("/shop")
 public class ShopController {
 	
@@ -56,4 +61,70 @@ public class ShopController {
 		
 		return photoName;
 	}
+	
+	@PostMapping("/insert")
+	public void insertShop(@RequestBody ShopDto dto) {
+		
+		// 업로드한 사진명
+		dto.setPhoto(photoName);
+		shopService.insertShop(dto);
+		photoName=""; // 초기화
+	}
+	
+	@GetMapping("/list")
+	public List<ShopDto> list(){
+		
+		return shopService.getShopDatas();
+	}
+	
+	@GetMapping("/detail")
+	public ShopDto detail(@RequestParam int num) {
+		return shopService.getData(num);
+	}
+	
+	@DeleteMapping("/delete")
+	public void delete(@RequestParam int num, HttpServletRequest request) {
+		
+		// save 경로 구하기
+		String path = request.getServletContext().getRealPath("/save");
+		System.out.println(path);
+		
+		// num에 해당하는 photo 얻기
+		String photo = shopService.getData(num).getPhoto();
+		System.out.println(photo);
+		
+		// 해당경로에 파일이 존재할 경우 삭제
+		File file = new File(path + "/" + photo);
+		// 만약 존재할 경우 삭제
+		if(file.exists())
+			file.delete();
+		
+		// db delete
+		shopService.deleteShop(num);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

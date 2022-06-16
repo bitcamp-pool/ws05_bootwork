@@ -14,12 +14,24 @@ public class ShopService implements ShopMapper {
 	@Autowired
 	private ShopMapper shopMapper;
 	
+	@Override
 	public void insertShop(ShopDto dto) {
 		shopMapper.insertShop(dto);		
 	}
 	
+	@Override
 	public List<ShopDto>getShopDatas(){
 		return shopMapper.getShopDatas();
+	}
+
+	@Override
+	public ShopDto getData(int num) {
+		return shopMapper.getData(num);
+	}
+	
+	@Override
+	public void deleteShop(int num) {
+		shopMapper.deleteShop(num);
 	}
 
 }
