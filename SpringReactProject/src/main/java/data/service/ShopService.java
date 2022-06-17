@@ -33,5 +33,9 @@ public class ShopService implements ShopMapper {
 	public void deleteShop(int num) {
 		shopMapper.deleteShop(num);
 	}
-
+	
+	@Override
+	public void updateShop(ShopDto dto) {
+		shopMapper.updateShop(dto);	
+	}
 }

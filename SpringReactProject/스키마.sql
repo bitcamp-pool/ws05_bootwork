@@ -84,7 +84,12 @@ create table shop (
 	ipgoday datetime
 );
 
-
+create table memo (
+   num smallint primary key auto_increment,
+   nickname varchar(30),
+   message varchar(1000),
+   writeday datetime
+);
 
 
 

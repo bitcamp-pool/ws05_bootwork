@@ -19,6 +19,14 @@
 		delete from shop where num=#{num}	
 	</delete>
 	
+	<update id="updateShop" parameterType="shop">
+		update shop set sangpum=#{sangpum}, su=#{su}, dan=#{dan}
+		<if test="photo!=null">
+			,photo=#{photo}
+		</if>
+		where num=#{num}
+	</update>
+	
 </mapper>
 
 
