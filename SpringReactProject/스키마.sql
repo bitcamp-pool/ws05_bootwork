@@ -91,7 +91,16 @@ create table memo (
    writeday datetime
 );
 
-
+create table reactboard(
+	num smallint primary key auto_increment,
+	id varchar(20),
+	name varchar(20),
+	photo varchar(100),
+	subject varchar(500),
+	content varchar(1000),
+	readcount smallint default 0,
+	writeday datetime
+);
 
 
 

@@ -25,7 +25,7 @@ public class MemberService implements MemberServiceInter{
 	@Override
 	public List<MemberDto> getAllMembers() {
 		// TODO Auto-generated method stub
-		return null;
+		return memberMapper.getAllMembers();
 	}
 
 	@Override
