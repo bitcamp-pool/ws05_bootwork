@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import data.dto.BoardDto;
 import data.service.BoardService;
+import data.service.MemberService;
 import util.FileUtil;
 
 @RestController
@@ -30,6 +31,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private MemberService memberService;  // 회원 이름 얻기위해
 	
 	String photoName; // 리액트에서 업로드한 이미지명(변경된 이미지명일 수도...)
 	
@@ -64,9 +68,17 @@ public class BoardController {
 		return photoName;
 	}
 	
-	@GetMapping("/insert")
+	@PostMapping("/insert")
 	public void insert(@RequestBody BoardDto dto) {
+//		System.out.println(dto);
+		
+		// id에 해당하는 이름 가져오기
+		String name = memberService.getName(dto.getId());
+		
+		dto.setName(name);
 		boardService.insertBoard(dto);
+		
+		photoName=null; // 이전 insert할때 지우지 않게
 	}
 	
 	@GetMapping("/detail")
